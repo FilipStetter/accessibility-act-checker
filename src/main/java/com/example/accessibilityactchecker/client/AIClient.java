@@ -1,7 +1,5 @@
 package com.example.accessibilityactchecker.client;
 
-import com.example.accessibilityactchecker.model.AIResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -43,8 +41,11 @@ public class AIClient {
     public HttpEntity<Map<String, Object>> createRequest(String content, HttpHeaders headers) {
         Map<String, Object> message = new HashMap<>();
         message.put("role", "user");
-        message.put("content", "Analyze the following HTML content for accessibility issues and suggest fixes:\n\n" + content);
-
+        message.put("content",
+                "Analyze the following HTML content for accessibility issues. Provide the output in this structured format: "
+                        + "1. Issue description - Severity: [Low/Medium/High/Critical]\n"
+                        + "   - Recommendation: [Detailed recommendation]\n\n"
+                        + content);
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", MODEL);
         requestBody.put("messages", List.of(message));
