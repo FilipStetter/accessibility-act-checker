@@ -47,3 +47,24 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task npmInstall(type: Exec) {
+    workingDir 'frontend'
+    commandLine 'npm', 'install'
+}
+
+task buildFrontend(type: Exec) {
+    dependsOn npmInstall
+    workingDir 'frontend'
+    commandLine 'npm', 'run', 'build'
+}
+
+tasks.register('copyFrontendBuild', Copy) {
+    dependsOn buildFrontend
+    from 'frontend/build'
+    into 'src/main/resources/static'
+}
+
+tasks.named('processResources') {
+    dependsOn 'copyFrontendBuild'
+}
