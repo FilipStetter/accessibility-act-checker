@@ -33,7 +33,14 @@ const AccessibilityCheckerForm = () => {
             }
 
             const result = await response.json();
-            setReport(result);
+            console.log("Report received from backend:", result);
+
+            // Normalize data structure
+            const normalizedReport = {
+                issues: result.issues || [],
+                recommendations: result.recommendations || []
+            };
+            setReport(normalizedReport);
         } catch (err) {
             console.error('Error analyzing content:', err);
             setError(err.message || 'An unknown error occurred.');
@@ -109,6 +116,8 @@ const AccessibilityCheckerForm = () => {
                         <Typography variant="h5" gutterBottom>
                             Accessibility Report
                         </Typography>
+
+                        {/* Issues Section */}
                         <Typography variant="h6" gutterBottom>
                             Issues
                         </Typography>
@@ -129,6 +138,7 @@ const AccessibilityCheckerForm = () => {
                             <Typography variant="body2">No issues found.</Typography>
                         )}
 
+                        {/* Recommendations Section */}
                         <Typography variant="h6" gutterBottom>
                             Recommendations
                         </Typography>

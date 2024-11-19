@@ -43,7 +43,7 @@ public class AccessibilityService {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseJson);
             String messageContent = rootNode.path("choices").get(0).path("message").path("content").asText();
-
+            messageContent = messageContent.replaceAll("^```json\\s*|\\s*```$", "");
             // Parse messageContent into an AccessibilityReport
             AccessibilityReport report = parseMessageContent(messageContent);
             log.info("Accessibility analysis completed successfully.");
@@ -55,43 +55,31 @@ public class AccessibilityService {
     }
 
     private AccessibilityReport parseMessageContent(String content) {
-        AccessibilityReport report = new AccessibilityReport();
-        List<AccessibilityReport.Issue> issues = new ArrayList<>();
-        List<AccessibilityReport.Recommendation> recommendations = new ArrayList<>();
+        try {
+            JsonNode root = objectMapper.readTree(content);
+            List<AccessibilityReport.Issue> issues = new ArrayList<>();
+            List<AccessibilityReport.Recommendation> recommendations = new ArrayList<>();
 
-        String[] lines = content.split("\n");
-        String currentIssue = null;
-        String currentSeverity = "N/A";
+            JsonNode issuesNode = root.path("issues");
+            if (issuesNode.isArray()) {
+                for (JsonNode issueNode : issuesNode) {
+                    String description = issueNode.path("description").asText();
+                    String severity = issueNode.path("severity").asText();
+                    String recommendation = issueNode.path("recommendation").asText();
 
-        for (String line : lines) {
-            line = line.trim();
-            if (line.matches("^\\d+\\.\\s+.*")) { // Match issue descriptions
-                if (currentIssue != null) {
-                    issues.add(new AccessibilityReport.Issue(currentIssue, currentSeverity));
-                }
-                currentIssue = line.replaceFirst("^\\d+\\.\\s+", "").split(" - Severity:")[0].trim();
-                currentSeverity = extractSeverity(line);
-            } else if (line.startsWith("- Recommendation:")) { // Match recommendations
-                if (currentIssue != null) {
-                    String recommendation = line.replaceFirst("- Recommendation:", "").trim();
-                    recommendations.add(new AccessibilityReport.Recommendation(recommendation, currentSeverity));
+                    issues.add(new AccessibilityReport.Issue(description, severity));
+                    recommendations.add(new AccessibilityReport.Recommendation(recommendation, severity));
                 }
             }
-        }
-        if (currentIssue != null) {
-            issues.add(new AccessibilityReport.Issue(currentIssue, currentSeverity));
-        }
 
-        report.setIssues(issues);
-        report.setRecommendations(recommendations);
-        return report;
+            AccessibilityReport report = new AccessibilityReport();
+            report.setIssues(issues);
+            report.setRecommendations(recommendations);
+            return report;
+        } catch (Exception e) {
+            log.error("Failed to parse accessibility report JSON: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to parse accessibility report", e);
+        }
     }
 
-    private String extractSeverity(String text) {
-        if (text.contains("Low")) return "Low";
-        if (text.contains("Medium")) return "Medium";
-        if (text.contains("High")) return "High";
-        if (text.contains("Critical")) return "Critical";
-        return "Low";
-    }
 }

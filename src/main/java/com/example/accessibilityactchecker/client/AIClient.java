@@ -42,12 +42,36 @@ public class AIClient {
         Map<String, Object> message = new HashMap<>();
         message.put("role", "user");
         message.put("content",
-                "Analyze the following HTML content for accessibility issues. Provide the output in this structured format: "
-                        + "1. Issue description - Severity: [Low/Medium/High/Critical]\n"
-                        + "   - Recommendation: [Detailed recommendation]\n\n"
-                        + content);
+                "You are an expert in web accessibility. Analyze the following HTML content for accessibility issues. " +
+                        "Always provide the response as valid JSON in the following format:\n\n" +
+                        "{\n" +
+                        "  \"issues\": [\n" +
+                        "    {\n" +
+                        "      \"description\": \"[Detailed description of the issue]\",\n" +
+                        "      \"severity\": \"[Low | Medium | High | Critical]\",\n" +
+                        "      \"recommendation\": \"[Detailed recommendation to fix the issue]\"\n" +
+                        "    }\n" +
+                        "  ],\n" +
+                        "  \"summary\": {\n" +
+                        "    \"totalIssues\": [number],\n" +
+                        "    \"recommendations\": [number]\n" +
+                        "  }\n" +
+                        "}\n\n" +
+                        "If no issues are found, respond with the following JSON:\n\n" +
+                        "{\n" +
+                        "  \"issues\": [],\n" +
+                        "  \"summary\": {\n" +
+                        "    \"totalIssues\": 0,\n" +
+                        "    \"recommendations\": 0\n" +
+                        "  }\n" +
+                        "}\n\n" +
+                        "Do not provide any additional text or explanation outside of this JSON format.\n\n" +
+                        "Here is the HTML content to analyze:\n" +
+                        content);
+
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", MODEL);
+        requestBody.put("temperature", 0.2);
         requestBody.put("messages", List.of(message));
         requestBody.put("max_tokens", MAX_TOKENS);
 
