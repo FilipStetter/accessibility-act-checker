@@ -5,6 +5,7 @@ import com.example.accessibilityactchecker.model.AccessibilityReport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,28 @@ public class AccessibilityService {
     private final AIClient aiClient;
     private final ObjectMapper objectMapper;
 
+
     public AccessibilityService(AIClient aiClient, ObjectMapper objectMapper) {
         this.aiClient = aiClient;
         this.objectMapper = objectMapper;
+
     }
+
 
     public AccessibilityReport analyze(String content) {
         if (content == null || content.trim().isEmpty()) {
             throw new IllegalArgumentException("Content cannot be null or empty");
+        }
+
+        if (isUrl(content)) {
+            log.info("Content is a URL. Fetching HTML content using PlaywrightService...");
+            content = SaleniumService.fetchHtmlContentWithSelenium(content);
+
+            if (content == null || content.trim().isEmpty()) {
+                throw new RuntimeException("Failed to fetch HTML content from the provided URL");
+            }
+
+            log.info("HTML content fetched successfully.");
         }
 
         HttpHeaders headers = aiClient.createHeaders();
@@ -44,6 +59,7 @@ public class AccessibilityService {
             JsonNode rootNode = objectMapper.readTree(responseJson);
             String messageContent = rootNode.path("choices").get(0).path("message").path("content").asText();
             messageContent = messageContent.replaceAll("^```json\\s*|\\s*```$", "");
+
             // Parse messageContent into an AccessibilityReport
             AccessibilityReport report = parseMessageContent(messageContent);
             log.info("Accessibility analysis completed successfully.");
@@ -52,6 +68,11 @@ public class AccessibilityService {
             log.error("Error analyzing accessibility: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to analyze accessibility", e);
         }
+    }
+
+    private boolean isUrl(String content) {
+        UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
+        return urlValidator.isValid(content);
     }
 
     private AccessibilityReport parseMessageContent(String content) {
