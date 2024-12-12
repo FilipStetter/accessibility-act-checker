@@ -10,7 +10,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 
-const Navbar = () => {
+const NavBar = () => {
     return (
         <AppBar position="sticky" color="default" elevation={0} sx={{ backgroundColor: 'white' }}>
             <Container maxWidth="lg">
@@ -47,4 +47,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default NavBar;

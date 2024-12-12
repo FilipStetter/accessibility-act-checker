@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import Navbar from './components/NavBar';
+import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import ResultsPage from './pages/ResultsPage';
 
@@ -36,7 +36,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Router>
-                <Navbar />
+                <NavBar />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/results" element={<ResultsPage />} />
