@@ -22,12 +22,14 @@ public class AIClient {
     private String apiKey;
 
     private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+    private static final String MODEL = "gpt-4o";
+    private static final int MAX_TOKENS = 500;
 
     public AIClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-    private static final String MODEL = "gpt-4o";
-    private static final int MAX_TOKENS = 500;
+
+
 
 
 
@@ -42,7 +44,7 @@ public class AIClient {
         Map<String, Object> message = new HashMap<>();
         message.put("role", "user");
         message.put("content",
-                "You are an expert in web accessibility. Analyze the following HTML content for accessibility issues. " +
+                "You are an expert in web accessibility. Analyze the following HTML content for accessibility issues using the WCAG 2.2 guidelines. " +
                         "Always provide the response as valid JSON in the following format:\n\n" +
                         "{\n" +
                         "  \"issues\": [\n" +

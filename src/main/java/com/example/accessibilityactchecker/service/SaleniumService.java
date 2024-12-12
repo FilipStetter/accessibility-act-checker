@@ -15,23 +15,23 @@ public class SaleniumService {
 
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Run in headless mode
+        options.addArguments("--headless");
         options.addArguments("--disable-gpu");
-        options.addArguments("--no-sandbox"); // Added for Docker environments
-        options.addArguments("--disable-dev-shm-usage"); // Handle shared memory issues
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
 
         WebDriver driver = new ChromeDriver(options);
         try {
             log.info("Fetching HTML content for URL: {}", url);
-            driver.get(url); // Navigate to the URL
-            String htmlContent = driver.getPageSource(); // Get the rendered HTML
+            driver.get(url);
+            String htmlContent = driver.getPageSource();
             log.info("Successfully fetched HTML content for URL: {}", url);
             return htmlContent;
         } catch (Exception e) {
             log.error("Error while fetching HTML content for URL: {}", url, e);
             throw new RuntimeException("Failed to fetch HTML content", e);
         } finally {
-            driver.quit(); // Close the browser
+            driver.quit();
         }
     }
 }
