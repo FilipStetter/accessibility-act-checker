@@ -36,7 +36,7 @@ const HomePage = () => {
                                 Web Accessibility Checker
                             </Typography>
                             <Typography variant="h5" paragraph sx={{ mb: 4, opacity: 0.9 }}>
-                                Test your website against WCAG 2.2 guidelines and ensure digital inclusion for all users.
+                                Test your website against WCAG guidelines and ensure digital inclusion for all users.
                             </Typography>
                             <Button
                                 variant="contained"
