@@ -125,7 +125,6 @@ const ResultsPage = () => {
                                         <ListItem alignItems="flex-start">
                                             <ListItemText
                                                 primary={rec.recommendation || "No recommendation provided"}
-                                                secondary={`Severity: ${rec.severity || issue.severity}`}
                                                 primaryTypographyProps={{
                                                     style: { wordBreak: 'break-word' },
                                                 }}

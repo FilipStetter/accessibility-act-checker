@@ -27,12 +27,12 @@ public class AccessibilityReport {
 
     @Data
     public static class Recommendation {
-        private String fix;
+        private String recommendation;
         private String explanation;
         private String correctCode;
 
-        public Recommendation(String fix, String explanation, String correctCode) {
-            this.fix = fix;
+        public Recommendation(String recommendation, String explanation, String correctCode) {
+            this.recommendation = recommendation;
             this.explanation = explanation;
             this.correctCode = correctCode;
         }
