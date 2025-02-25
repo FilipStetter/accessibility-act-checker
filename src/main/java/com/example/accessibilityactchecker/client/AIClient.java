@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 @Slf4j
 @Component
 public class AIClient {
@@ -28,10 +30,6 @@ public class AIClient {
     public AIClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
-
-
-
 
     public HttpHeaders createHeaders() {
         HttpHeaders headers = new HttpHeaders();
@@ -75,19 +73,16 @@ public class AIClient {
                 content
         );
 
-        // Prepare the message map
         Map<String, Object> message = new HashMap<>();
         message.put("role", "user");
         message.put("content", prompt);
 
-        // Construct the request body
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", MODEL);
-        requestBody.put("temperature", 0.2);
+        requestBody.put("temperature", 0.8);
         requestBody.put("messages", List.of(message));
         requestBody.put("max_tokens", MAX_TOKENS);
 
-        // Return the HttpEntity with the request body and headers
         return new HttpEntity<>(requestBody, headers);
     }
 
