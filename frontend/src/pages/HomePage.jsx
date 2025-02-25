@@ -36,7 +36,7 @@ const HomePage = () => {
                                 Web Accessibility Checker
                             </Typography>
                             <Typography variant="h5" paragraph sx={{ mb: 4, opacity: 0.9 }}>
-                                Test your website against WCAG 2.2 guidelines and ensure digital inclusion for all users.
+                                Test your website against WCAG guidelines and ensure digital inclusion for all users.
                             </Typography>
                             <Button
                                 variant="contained"
@@ -206,10 +206,10 @@ const HomePage = () => {
                         color="primary"
                         sx={{
                             mt: 2,
-                            px: 3, // Add extra horizontal padding
-                            py: 1.5, // Add extra vertical padding
-                            fontSize: '1.25rem', // Increase font size
-                            borderRadius: '8px', // Optional: Adjust border radius for a modern look
+                            px: 3,
+                            py: 1.5,
+                            fontSize: '1.25rem',
+                            borderRadius: '8px',
                         }}
                     >
                         Get a quote
