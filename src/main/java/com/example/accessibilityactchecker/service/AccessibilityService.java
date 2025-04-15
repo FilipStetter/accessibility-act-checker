@@ -54,13 +54,11 @@ public class AccessibilityService {
 
             log.info("Raw OpenAI response: {}", responseJson);
 
-            // Extract choices[0].message.content from the response
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseJson);
             String messageContent = rootNode.path("choices").get(0).path("message").path("content").asText();
             messageContent = messageContent.replaceAll("^```json\\s*|\\s*```$", "");
 
-            // Parse messageContent into an AccessibilityReport
             AccessibilityReport report = parseMessageContent(messageContent);
             log.info("Accessibility analysis completed successfully.");
             return report;

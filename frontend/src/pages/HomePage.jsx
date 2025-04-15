@@ -5,7 +5,6 @@ import {
     Typography,
     Paper,
     Box,
-    Button,
     List,
     ListItem,
     ListItemIcon,
@@ -20,7 +19,6 @@ import CheckerForm from '../components/CheckerForm';
 const HomePage = () => {
     return (
         <>
-            {/* Hero Section */}
             <Box
                 sx={{
                     background: 'linear-gradient(45deg, #1976d2 30%, #2196f3 90%)',
@@ -36,21 +34,8 @@ const HomePage = () => {
                                 Web Accessibility Checker
                             </Typography>
                             <Typography variant="h5" paragraph sx={{ mb: 4, opacity: 0.9 }}>
-                                Test your website against WCAG 2.2 guidelines and ensure digital inclusion for all users.
+                                Test your website against WCAG guidelines and ensure digital inclusion for all users.
                             </Typography>
-                            <Button
-                                variant="contained"
-                                size="large"
-                                sx={{
-                                    backgroundColor: 'white',
-                                    color: 'primary.main',
-                                    '&:hover': {
-                                        backgroundColor: 'grey.100',
-                                    },
-                                }}
-                            >
-                                Start Free Check
-                            </Button>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Paper
@@ -67,7 +52,6 @@ const HomePage = () => {
                 </Container>
             </Box>
 
-            {/* Benefits Section */}
             <Container maxWidth="lg">
                 <Box sx={{ mb: 8 }}>
                     <Typography variant="h3" align="center" gutterBottom fontWeight="bold">
@@ -140,7 +124,7 @@ const HomePage = () => {
                     </Grid>
                 </Box>
 
-                {/* Features Section */}
+
                 <Box sx={{ mb: 8 }}>
                     <Typography variant="h3" align="center" gutterBottom fontWeight="bold">
                         Comprehensive Testing
@@ -181,39 +165,6 @@ const HomePage = () => {
                             </List>
                         </Grid>
                     </Grid>
-                </Box>
-
-                {/* CTA Section */}
-                <Box
-                    sx={{
-                        textAlign: 'center',
-                        py: 8,
-                        px: 2,
-                        backgroundColor: 'grey.50',
-                        borderRadius: 2,
-                        mb: 8,
-                    }}
-                >
-                    <Typography variant="h3" gutterBottom fontWeight="bold">
-                        Start Your Accessibility Journey Today
-                    </Typography>
-                    <Typography variant="h6" paragraph color="text.secondary">
-                        In-Depth Manual Accessibility Audits by Accessibility Experts. We've Got Your Back!
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        color="primary"
-                        sx={{
-                            mt: 2,
-                            px: 3, // Add extra horizontal padding
-                            py: 1.5, // Add extra vertical padding
-                            fontSize: '1.25rem', // Increase font size
-                            borderRadius: '8px', // Optional: Adjust border radius for a modern look
-                        }}
-                    >
-                        Get a quote
-                    </Button>
                 </Box>
             </Container>
         </>

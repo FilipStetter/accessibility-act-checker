@@ -8,11 +8,6 @@ import {
     Chip,
     Button,
     Grid,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Divider,
 } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -26,14 +21,32 @@ const ResultsPage = () => {
 
     const getSeverityIcon = (severity) => {
         switch (severity.toLowerCase()) {
-            case 'high':
+            case 'critical':
                 return <ErrorIcon color="error" />;
-            case 'medium':
+            case 'high':
                 return <WarningIcon color="warning" />;
+            case 'medium':
             default:
                 return <InfoIcon color="info" />;
         }
     };
+
+    const severityOrder = {
+        critical: 1,
+        high: 2,
+        medium: 3,
+    };
+
+    const sortedIssues = report.issues
+        .map((issue, index) => ({
+            ...issue,
+            recommendation: report.recommendations[index],
+        }))
+        .sort((a, b) => {
+            const aSeverity = severityOrder[a.severity.toLowerCase()] || 99;
+            const bSeverity = severityOrder[b.severity.toLowerCase()] || 99;
+            return aSeverity - bSeverity;
+        });
 
     return (
         <Container maxWidth="lg">
@@ -51,7 +64,6 @@ const ResultsPage = () => {
                 </Typography>
 
                 <Grid container spacing={4}>
-                    {/* Summary Section */}
                     <Grid item xs={12}>
                         <Paper elevation={3} sx={{ p: 3 }}>
                             <Typography variant="h6" gutterBottom>
@@ -61,7 +73,7 @@ const ResultsPage = () => {
                                 <Chip
                                     label={`${
                                         report.issues.filter(
-                                            (i) => i.severity.toLowerCase() === 'high'
+                                            (i) => i.severity.toLowerCase() === 'critical'
                                         ).length
                                     } Critical Issues`}
                                     color="error"
@@ -69,7 +81,7 @@ const ResultsPage = () => {
                                 <Chip
                                     label={`${
                                         report.issues.filter(
-                                            (i) => i.severity.toLowerCase() === 'medium'
+                                            (i) => i.severity.toLowerCase() === 'high'
                                         ).length
                                     } Warnings`}
                                     color="warning"
@@ -77,7 +89,7 @@ const ResultsPage = () => {
                                 <Chip
                                     label={`${
                                         report.issues.filter(
-                                            (i) => i.severity.toLowerCase() === 'low'
+                                            (i) => i.severity.toLowerCase() === 'medium'
                                         ).length
                                     } Suggestions`}
                                     color="info"
@@ -86,96 +98,68 @@ const ResultsPage = () => {
                         </Paper>
                     </Grid>
 
-                    {/* Issues Section */}
-                    <Grid item xs={12} md={6}>
-                        <Paper elevation={3} sx={{ p: 3 }}>
-                            <Typography variant="h6" gutterBottom>
-                                Issues Found
-                            </Typography>
-                            <List>
-                                {report.issues.map((issue, index) => (
-                                    <React.Fragment key={index}>
-                                        <ListItem alignItems="flex-start">
-                                            <ListItemIcon>
-                                                {getSeverityIcon(issue.severity)}
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={issue.description}
-                                                secondary={`Severity: ${issue.severity}`}
-                                                primaryTypographyProps={{
-                                                    style: { wordBreak: 'break-word' },
-                                                }}
-                                                secondaryTypographyProps={{
-                                                    style: { wordBreak: 'break-word' },
-                                                }}
-                                            />
-                                        </ListItem>
-                                        {index < report.issues.length - 1 && <Divider />}
-                                    </React.Fragment>
-                                ))}
-                            </List>
-                        </Paper>
-                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6" gutterBottom>
+                            Issues & Recommendations
+                        </Typography>
 
-                    {/* Recommendations Section */}
-                    <Grid item xs={12} md={6}>
-                        <Paper elevation={3} sx={{ p: 3 }}>
-                            <Typography variant="h6" gutterBottom>
-                                Recommendations
-                            </Typography>
-                            <List>
-                                {report.recommendations.map((rec, index) => (
-                                    <React.Fragment key={index}>
-                                        <ListItem alignItems="flex-start">
-                                            <ListItemText
-                                                primary={rec.fix}
-                                                secondary={rec.explanation}
-                                                primaryTypographyProps={{
-                                                    style: { wordBreak: 'break-word' },
-                                                }}
-                                                secondaryTypographyProps={{
-                                                    style: { wordBreak: 'break-word' },
-                                                }}
-                                            />
-                                        </ListItem>
-                                        {index < report.recommendations.length - 1 && <Divider />}
-                                    </React.Fragment>
-                                ))}
-                            </List>
-                        </Paper>
+                        {sortedIssues.map((issue, index) => {
+                            const severity = issue.severity.toLowerCase();
+                            const icon = getSeverityIcon(issue.severity);
+
+                            return (
+                                <Paper
+                                    key={index}
+                                    elevation={2}
+                                    sx={{
+                                        p: 3,
+                                        mb: 3,
+                                        borderLeft: `6px solid ${
+                                            severity === 'critical'
+                                                ? '#d32f2f'
+                                                : severity === 'high'
+                                                    ? '#ed6c02'
+                                                    : '#0288d1'
+                                        }`,
+                                    }}
+                                >
+                                    <Box display="flex" alignItems="center" mb={1}>
+                                        <Box mr={1}>{icon}</Box>
+                                        <Typography variant="subtitle1" fontWeight="bold">
+                                            Issue {index + 1}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="body1" sx={{ mb: 1 }}>
+                                        {issue.description}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                                        Severity: {issue.severity}
+                                    </Typography>
+
+                                    {issue.recommendation && (
+                                        <>
+                                            <Typography
+                                                variant="subtitle2"
+                                                fontWeight="bold"
+                                                color="primary"
+                                                gutterBottom
+                                                mt={2}
+                                            >
+                                                Recommendation
+                                            </Typography>
+                                            <Typography variant="body1" sx={{ mb: 1 }}>
+                                                {issue.recommendation.fix}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {issue.recommendation.explanation}
+                                            </Typography>
+                                        </>
+                                    )}
+                                </Paper>
+                            );
+                        })}
                     </Grid>
                 </Grid>
-            </Box>
-            <Box
-                sx={{
-                    textAlign: 'center',
-                    py: 8,
-                    px: 2,
-                    backgroundColor: 'grey.50',
-                    borderRadius: 2,
-                    mb: 8,
-                }}
-            >
-                <Typography variant="h3" gutterBottom fontWeight="bold">
-                    Start Your Accessibility Journey Today
-                </Typography>
-                <Typography variant="h6" paragraph color="text.secondary">
-                    In-Depth Manual Accessibility Audits by Accessibility Experts. We've Got Your Back!
-                </Typography>
-                <Button
-                    variant="contained"
-                    size="large"
-                    color="primary"
-                    sx={{
-                        mt: 2,
-                        px: 3, // Add extra horizontal padding
-                        py: 1.5, // Add extra vertical padding
-                        fontSize: '1.25rem', // Increase font size
-                        borderRadius: '8px', // Optional: Adjust border radius for a modern look
-                    }}
-                >
-                    Get a quote
-                </Button>
             </Box>
         </Container>
     );

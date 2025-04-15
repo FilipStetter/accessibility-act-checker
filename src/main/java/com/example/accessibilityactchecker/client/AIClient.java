@@ -1,5 +1,6 @@
 package com.example.accessibilityactchecker.client;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -12,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 @Slf4j
 @Component
 public class AIClient {
@@ -22,16 +25,12 @@ public class AIClient {
     private String apiKey;
 
     private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-    private static final String MODEL = "gpt-4o";
-    private static final int MAX_TOKENS = 500;
+    private static final String MODEL = "gpt-4o-mini-2024-07-18";
+    private static final int MAX_TOKENS = 5000;
 
     public AIClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
-
-
-
 
     public HttpHeaders createHeaders() {
         HttpHeaders headers = new HttpHeaders();
@@ -50,7 +49,7 @@ public class AIClient {
                         "  \"issues\": [\n" +
                         "    {\n" +
                         "      \"description\": \"[Detailed description of the issue]\",\n" +
-                        "      \"severity\": \"[Low | Medium | High | Critical]\",\n" +
+                        "      \"severity\": \"[Medium | High | Critical]\",\n" +
                         "      \"recommendation\": \"[Detailed recommendation to fix the issue]\"\n" +
                         "    }\n" +
                         "  ],\n" +
@@ -73,9 +72,9 @@ public class AIClient {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", MODEL);
-        requestBody.put("temperature", 0.2);
         requestBody.put("messages", List.of(message));
-        requestBody.put("max_tokens", MAX_TOKENS);
+        requestBody.put("max_completion_tokens", MAX_TOKENS);
+        requestBody.put("temperature", 0.2);
 
         return new HttpEntity<>(requestBody, headers);
     }
