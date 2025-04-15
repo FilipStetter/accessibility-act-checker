@@ -85,9 +85,11 @@ public class AccessibilityService {
                     String description = issueNode.path("description").asText();
                     String severity = issueNode.path("severity").asText();
                     String recommendation = issueNode.path("recommendation").asText();
+                    String faultyCode = issueNode.path("faultyCode").asText();
+                    String correctCode = issueNode.path("correctCode").asText();
 
-                    issues.add(new AccessibilityReport.Issue(description, severity));
-                    recommendations.add(new AccessibilityReport.Recommendation(recommendation, severity));
+                    issues.add(new AccessibilityReport.Issue(description, severity, faultyCode));
+                    recommendations.add(new AccessibilityReport.Recommendation(recommendation, severity, correctCode));
                 }
             }
 
